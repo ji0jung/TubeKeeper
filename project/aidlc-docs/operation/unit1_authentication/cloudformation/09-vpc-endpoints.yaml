@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AIDLC Unit1 Authentication - VPC Endpoints'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: staging
+  ProjectName:
+    Type: String
+    Default: aidlc-auth
+
+Resources:
+  # Security Group for VPC Endpoints
+  VPCEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub '${ProjectName}-${Environment}-vpc-endpoints-sg'
+      GroupDescription: Security group for VPC endpoints
+      VpcId: 
+        Fn::ImportValue: !Sub '${ProjectName}-${Environment}-VPC'
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          SourceSecurityGroupId: 
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-ECSSecurityGroup'
+          Description: HTTPS from ECS tasks
+      Tags:
+        - Key: Name
+          Value: !Sub '${ProjectName}-${Environment}-vpc-endpoints-sg'
+
+  # VPC Endpoint for Systems Manager (Parameter Store)
+  SSMVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: 
+        Fn::ImportValue: !Sub '${ProjectName}-${Environment}-VPC'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ssm'
+      VpcEndpointType: Interface
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+      SecurityGroupIds:
+        - !Ref VPCEndpointSecurityGroup
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - ssm:GetParameter
+              - ssm:GetParameters
+              - ssm:GetParametersByPath
+            Resource: '*'
+
+  # VPC Endpoint for Secrets Manager
+  SecretsManagerVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: 
+        Fn::ImportValue: !Sub '${ProjectName}-${Environment}-VPC'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.secretsmanager'
+      VpcEndpointType: Interface
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+      SecurityGroupIds:
+        - !Ref VPCEndpointSecurityGroup
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource: '*'
+
+  # VPC Endpoint for ECR API
+  ECRAPIVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: 
+        Fn::ImportValue: !Sub '${ProjectName}-${Environment}-VPC'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.api'
+      VpcEndpointType: Interface
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+      SecurityGroupIds:
+        - !Ref VPCEndpointSecurityGroup
+
+  # VPC Endpoint for ECR Docker
+  ECRDockerVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: 
+        Fn::ImportValue: !Sub '${ProjectName}-${Environment}-VPC'
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.ecr.dkr'
+      VpcEndpointType: Interface
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+      SecurityGroupIds:
+        - !Ref VPCEndpointSecurityGroup
+
+Outputs:
+  SSMVPCEndpointId:
+    Description: VPC Endpoint ID for Systems Manager
+    Value: !Ref SSMVPCEndpoint
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-SSMVPCEndpoint'
+
+  SecretsManagerVPCEndpointId:
+    Description: VPC Endpoint ID for Secrets Manager
+    Value: !Ref SecretsManagerVPCEndpoint
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-SecretsManagerVPCEndpoint'
+
+  VPCEndpointSecurityGroupId:
+    Description: Security Group ID for VPC Endpoints
+    Value: !Ref VPCEndpointSecurityGroup
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-VPCEndpointSecurityGroup'

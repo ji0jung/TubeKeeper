@@ -1,0 +1,135 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AIDLC Unit1 Authentication - Database Infrastructure'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: staging
+    Description: Environment name
+  
+  ProjectName:
+    Type: String
+    Default: aidlc-auth
+    Description: Project name for resource naming
+
+  DBInstanceClass:
+    Type: String
+    Default: db.t3.micro
+    Description: RDS instance class
+
+Resources:
+  # DB Subnet Group
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub '${ProjectName}-${Environment}-db-subnet-group'
+      DBSubnetGroupDescription: Subnet group for RDS database
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+      Tags:
+        - Key: Name
+          Value: !Sub '${ProjectName}-${Environment}-db-subnet-group'
+
+  # Database Password in Secrets Manager
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub '${ProjectName}-${Environment}-db-credentials'
+      Description: Database credentials for AIDLC Auth service
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "aidlc_user"}'
+        GenerateStringKey: 'password'
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\'
+
+  # RDS PostgreSQL Instance
+  Database:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: !Sub '${ProjectName}-${Environment}-postgres'
+      DBName: aidlc_auth
+      DBInstanceClass: !Ref DBInstanceClass
+      Engine: postgres
+      EngineVersion: '15.14'
+      AllocatedStorage: 20
+      StorageType: gp2
+      StorageEncrypted: true
+      
+      MasterUsername: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DBSecret}:SecretString:password}}'
+      
+      VPCSecurityGroups:
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-RDSSecurityGroup'
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: '03:00-04:00'
+      PreferredMaintenanceWindow: 'sun:04:00-sun:05:00'
+      
+      DeletionProtection: false
+      PubliclyAccessible: false
+      
+      Tags:
+        - Key: Name
+          Value: !Sub '${ProjectName}-${Environment}-postgres'
+
+  # ElastiCache Subnet Group
+  CacheSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      CacheSubnetGroupName: !Sub '${ProjectName}-${Environment}-cache-subnet-group'
+      Description: Subnet group for ElastiCache
+      SubnetIds: !Split
+        - ','
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-PrivateSubnets'
+
+  # ElastiCache Redis
+  RedisCache:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      CacheNodeType: cache.t3.micro
+      NumCacheNodes: 1
+      
+      VpcSecurityGroupIds:
+        - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-RedisSecurityGroup'
+      CacheSubnetGroupName: !Ref CacheSubnetGroup
+
+Outputs:
+  DatabaseEndpoint:
+    Description: RDS PostgreSQL endpoint
+    Value: !GetAtt Database.Endpoint.Address
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-DatabaseEndpoint'
+
+  DatabasePort:
+    Description: RDS PostgreSQL port
+    Value: !GetAtt Database.Endpoint.Port
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-DatabasePort'
+
+  DatabaseName:
+    Description: Database name
+    Value: aidlc_auth
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-DatabaseName'
+
+  DBSecretArn:
+    Description: Database credentials secret ARN
+    Value: !Ref DBSecret
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-DBSecretArn'
+
+  RedisEndpoint:
+    Description: ElastiCache Redis endpoint
+    Value: !GetAtt RedisCache.RedisEndpoint.Address
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-RedisEndpoint'
+
+  RedisPort:
+    Description: ElastiCache Redis port
+    Value: !GetAtt RedisCache.RedisEndpoint.Port
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-RedisPort'

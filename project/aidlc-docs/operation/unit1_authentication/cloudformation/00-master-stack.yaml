@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AIDLC Unit1 Authentication - Master Stack'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: staging
+    Description: Environment name
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+  
+  ProjectName:
+    Type: String
+    Default: aidlc-auth
+    Description: Project name for resource naming
+
+  ImageURI:
+    Type: String
+    Default: nginx:latest
+    Description: Docker image URI for the application
+
+  TemplatesBucketName:
+    Type: String
+    Description: S3 bucket containing CloudFormation templates (created separately)
+
+Resources:
+  # Network Infrastructure
+  NetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/01-network.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # Security Groups
+  SecurityGroupsStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: NetworkStack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/02-security-groups.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # Database Infrastructure
+  DatabaseStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: SecurityGroupsStack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/03-database.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # IAM Roles
+  IAMRolesStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: DatabaseStack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/05-iam-roles.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # ECR Repository
+  ECRStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/06-ecr.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # Monitoring
+  MonitoringStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/07-monitoring.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+
+  # ECS and ALB
+  ECSStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: 
+      - IAMRolesStack
+      - MonitoringStack
+    Properties:
+      TemplateURL: !Sub 'https://${TemplatesBucketName}.s3.amazonaws.com/04-ecs-alb.yaml'
+      Parameters:
+        Environment: !Ref Environment
+        ProjectName: !Ref ProjectName
+        ImageURI: !Ref ImageURI
+
+Outputs:
+  ApplicationURL:
+    Description: Application Load Balancer URL
+    Value: !GetAtt ECSStack.Outputs.LoadBalancerURL
+
+  ECRRepositoryURI:
+    Description: ECR Repository URI for Docker images
+    Value: !GetAtt ECRStack.Outputs.ECRRepositoryURI
+
+  DatabaseEndpoint:
+    Description: RDS Database endpoint
+    Value: !GetAtt DatabaseStack.Outputs.DatabaseEndpoint
+
+  DashboardURL:
+    Description: CloudWatch Dashboard URL
+    Value: !GetAtt MonitoringStack.Outputs.DashboardURL

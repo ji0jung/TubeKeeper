@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AIDLC Unit1 Authentication - IAM Roles and Policies'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: staging
+    Description: Environment name
+  
+  ProjectName:
+    Type: String
+    Default: aidlc-auth
+    Description: Project name for resource naming
+
+Resources:
+  # ECS Task Execution Role
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ProjectName}-${Environment}-ecs-execution-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: SecretsManagerAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource:
+                  - Fn::ImportValue: !Sub '${ProjectName}-${Environment}-DBSecretArn'
+        - PolicyName: ParameterStoreAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource:
+                  - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ProjectName}/${Environment}/*'
+
+  # ECS Task Role
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${ProjectName}-${Environment}-ecs-task-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudWatchLogs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/ecs/${ProjectName}-${Environment}*'
+        - PolicyName: SESAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    'ses:FromAddress': 'jhrhee@amazon.com'
+
+  # JWT Secret in Parameter Store
+  JWTSecret:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub '/${ProjectName}/${Environment}/jwt-secret'
+      Type: String
+      Value: !Sub '${AWS::StackName}-jwt-secret-${AWS::AccountId}-${AWS::Region}'
+      Description: JWT secret key for authentication
+
+  # Application Configuration Parameters
+  DatabaseUrlParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub '/${ProjectName}/${Environment}/database-url'
+      Type: String
+      Value: !Sub 
+        - 'postgresql://{{resolve:secretsmanager:${SecretArn}:SecretString:username}}:{{resolve:secretsmanager:${SecretArn}:SecretString:password}}@${DatabaseEndpoint}:${DatabasePort}/${DatabaseName}'
+        - SecretArn: 
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-DBSecretArn'
+          DatabaseEndpoint:
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-DatabaseEndpoint'
+          DatabasePort:
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-DatabasePort'
+          DatabaseName:
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-DatabaseName'
+      Description: Database connection URL
+
+  RedisUrlParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub '/${ProjectName}/${Environment}/redis-url'
+      Type: String
+      Value: !Sub 
+        - 'redis://${RedisEndpoint}:${RedisPort}'
+        - RedisEndpoint:
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-RedisEndpoint'
+          RedisPort:
+            Fn::ImportValue: !Sub '${ProjectName}-${Environment}-RedisPort'
+      Description: Redis connection URL
+
+Outputs:
+  ECSTaskExecutionRoleArn:
+    Description: ECS Task Execution Role ARN
+    Value: !GetAtt ECSTaskExecutionRole.Arn
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-ECSTaskExecutionRoleArn'
+
+  ECSTaskRoleArn:
+    Description: ECS Task Role ARN
+    Value: !GetAtt ECSTaskRole.Arn
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-ECSTaskRoleArn'
+
+  JWTSecretParameter:
+    Description: JWT Secret Parameter Name
+    Value: !Ref JWTSecret
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-JWTSecretParameter'
+
+  DatabaseUrlParameter:
+    Description: Database URL Parameter Name
+    Value: !Ref DatabaseUrlParameter
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-DatabaseUrlParameter'
+
+  RedisUrlParameter:
+    Description: Redis URL Parameter Name
+    Value: !Ref RedisUrlParameter
+    Export:
+      Name: !Sub '${ProjectName}-${Environment}-RedisUrlParameter'

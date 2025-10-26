@@ -1,0 +1,71 @@
+{
+    "family": "staging-aidlc-auth",
+    "taskRoleArn": "arn:aws:iam::147997118879:role/staging-aidlc-ecs-task-role",
+    "executionRoleArn": "arn:aws:iam::147997118879:role/staging-aidlc-ecs-execution-role",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "containerDefinitions": [
+        {
+            "name": "aidlc-auth",
+            "image": "147997118879.dkr.ecr.us-east-1.amazonaws.com/aidlc-auth-staging:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 8001,
+                    "hostPort": 8001,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "AWS_DEFAULT_REGION",
+                    "value": "us-east-1"
+                },
+                {
+                    "name": "SES_FROM_EMAIL",
+                    "value": "jhrhee@amazon.com"
+                },
+                {
+                    "name": "ENVIRONMENT",
+                    "value": "staging"
+                },
+                {
+                    "name": "REDIS_URL",
+                    "value": "redis://aid-re-oud96mxqxb2a.tg07bt.0001.use1.cache.amazonaws.com:6379"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "DB_HOST",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:147997118879:secret:aidlc-auth-staging-db-credentials-7iZvWe:host::"
+                },
+                {
+                    "name": "DB_PORT",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:147997118879:secret:aidlc-auth-staging-db-credentials-7iZvWe:port::"
+                },
+                {
+                    "name": "DB_NAME",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:147997118879:secret:aidlc-auth-staging-db-credentials-7iZvWe:dbname::"
+                },
+                {
+                    "name": "DB_USERNAME",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:147997118879:secret:aidlc-auth-staging-db-credentials-7iZvWe:username::"
+                },
+                {
+                    "name": "DB_PASSWORD",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:147997118879:secret:aidlc-auth-staging-db-credentials-7iZvWe:password::"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/staging-aidlc-auth",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ]
+}
