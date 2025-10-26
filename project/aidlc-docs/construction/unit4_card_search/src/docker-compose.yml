@@ -1,0 +1,51 @@
+# Unit4: Card Search & Display - Docker Compose
+
+services:
+  unit4-search:
+    build: .
+    ports:
+      - "8004:8000"  # External:Internal
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@postgres:5432/aidlc_db
+      - REDIS_URL=redis://redis:6379/0
+      - UNIT3_SERVICE_URL=http://unit3-cards:8000
+      - JWT_SECRET_KEY=test_secret_key_for_development_only
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - unit4-network
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: aidlc_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"  # Changed from 5432 to avoid conflict
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./migrations/001_create_search_indexes.sql:/docker-entrypoint-initdb.d/02-indexes.sql
+    networks:
+      - unit4-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"  # Changed from 6379 to avoid conflict
+    volumes:
+      - redis_data:/data
+    networks:
+      - unit4-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  unit4-network:
+    driver: bridge

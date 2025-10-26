@@ -1,0 +1,118 @@
+INFO:     Started server process [47123]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8002 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50309 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50312 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50312 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50312 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50312 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50312 - "DELETE /api/categories/2e2be910-d5c2-4824-8bc5-68fa990a73c1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:50312 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/e4533333-e41f-4558-b7c5-fdfe1294de02 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/5fdb2439-15a2-45b3-bd7d-a087c67c979c HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50334 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50334 - "GET /api/categories/798d88f9-bdc7-4cda-bbc4-696ad7b2b9eb/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/798d88f9-bdc7-4cda-bbc4-696ad7b2b9eb HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:50334 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50334 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50334 - "GET /api/categories/a6c9ab4e-799e-4a5c-b174-bb7d26719844/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/a6c9ab4e-799e-4a5c-b174-bb7d26719844 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50334 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50334 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/d13f2c41-0ead-4fb0-987f-61a0be5fe132 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/a1b83765-a06e-4c73-9479-857467062238 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:50334 - "DELETE /api/categories/a6c9ab4e-799e-4a5c-b174-bb7d26719844 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:50334 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62687 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "DELETE /api/categories/fb0fbcef-f9fc-4ea8-92b0-da983960ef6e HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62687 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62687 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/1c50a8c2-1dc1-49f9-b90d-74de8ac38315 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/7f06bf8a-3498-4700-9c69-7dce6c29d5e9 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62710 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62710 - "GET /api/categories/ed1ffac9-7844-4522-8fc4-b928af7a7789/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/ed1ffac9-7844-4522-8fc4-b928af7a7789 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62710 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62710 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62710 - "GET /api/categories/a41005c7-4dfe-46d1-aa6b-f70b86c19d5f/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/a41005c7-4dfe-46d1-aa6b-f70b86c19d5f HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62710 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62710 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/d50b8072-044f-4e34-ab9c-1a6bd14af943 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/12b250f7-84a1-44de-8feb-a65f45d4122a HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62710 - "DELETE /api/categories/a41005c7-4dfe-46d1-aa6b-f70b86c19d5f HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62710 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62710 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62780 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62785 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62787 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62921 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62921 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62921 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62921 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62921 - "DELETE /api/categories/a827be7a-9ed0-448a-ad62-77ee02c0a2ce HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62921 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62921 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/9bacc0b2-a9f3-49a4-9b13-9acfdf78cb8c HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/e4fa9681-2a0b-4cb6-bd3b-8c7143f7de1d HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62936 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62936 - "GET /api/categories/bd497a34-fd2a-4851-9ca3-8cc2af60ae80/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/bd497a34-fd2a-4851-9ca3-8cc2af60ae80 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62936 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62936 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62936 - "GET /api/categories/73e9e656-c515-4288-9a04-021e2e79cf91/deletion-preview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/73e9e656-c515-4288-9a04-021e2e79cf91 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62936 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62936 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/316fec4a-3ce8-4b69-bb09-e9e19baa0efa HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/6c5df8f3-41dd-4024-9e4a-4fb6ca1ea11c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/73e9e656-c515-4288-9a04-021e2e79cf91 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62936 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62936 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/9bacc0b2-a9f3-49a4-9b13-9acfdf78cb8c HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:62936 - "DELETE /api/categories/e4fa9681-2a0b-4cb6-bd3b-8c7143f7de1d HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:63037 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63037 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63037 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:63037 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63037 - "DELETE /api/categories/18c6d632-fc75-48b6-9a73-726b28451e23 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63037 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63057 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:63063 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:63072 - "POST /api/categories HTTP/1.1" 201 Created
+INFO:     127.0.0.1:63078 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:63082 - "DELETE /api/categories/0770610b-1d48-4151-8c2d-cae0fa2cfd42 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:63102 - "DELETE /api/categories/bbb91e5e-94ee-4d51-b81f-f73a0fdabd22 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:63106 - "DELETE /api/categories/0684c7b0-a4fa-46b2-a70b-1fefbf25ba1c HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:63108 - "DELETE /api/categories/a2c6ede9-575b-4f32-98d5-25362853babe HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63111 - "DELETE /api/categories/3d6ce89c-2d37-4115-b476-16da3de58583 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:63116 - "DELETE /api/categories/0684c7b0-a4fa-46b2-a70b-1fefbf25ba1c HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:65173 - "GET /redoc HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65173 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50687 - "GET /api/categories HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50687 - "GET /api/categories HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:50687 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:50687 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:50687 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:50687 - "GET /api/categories/c057349a-af99-4aa2-8d08-3dfe90a7eb75 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:50706 - "GET /api/categories/4fce3d6e-a252-4452-95d7-d0d0189f6422 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51192 - "GET /api/categories HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51192 - "GET /api/categories HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51192 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51192 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51192 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51192 - "GET /api/categories/99d60054-5fd5-4eb7-91c6-8bd7498df966 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51200 - "GET /api/categories/d4722df1-db91-430b-9a18-f870b0d3f144 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51265 - "GET /api/categories/ae39e64b-ab43-4274-a948-1570994b8be5 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51897 - "GET /api/categories HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51897 - "GET /api/categories HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:51897 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51897 - "POST /api/categories HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51897 - "POST /api/categories HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51897 - "GET /api/categories/5ed4357d-3cf8-42f5-a3a4-7d4e93ad67a0 HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51900 - "GET /api/categories/8362e5f7-fe3d-4ef4-ae96-6d72397f1050 HTTP/1.1" 405 Method Not Allowed

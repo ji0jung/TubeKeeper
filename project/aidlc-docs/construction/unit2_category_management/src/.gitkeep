@@ -1,0 +1,35 @@
+# Unit2 Category Management Source Code Directory
+
+이 디렉터리는 Unit2 카테고리 관리 기능의 소스 코드를 포함합니다.
+
+## 디렉터리 구조 (예정)
+
+```
+src/
+├── domain/
+│   ├── entities/
+│   ├── value_objects/
+│   ├── events/
+│   ├── services/
+│   └── exceptions/
+├── application/
+│   ├── services/
+│   ├── commands/
+│   ├── queries/
+│   └── handlers/
+├── infrastructure/
+│   ├── repositories/
+│   ├── cache/
+│   ├── events/
+│   └── external/
+├── api/
+│   ├── routers/
+│   ├── models/
+│   └── middleware/
+├── config/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── fixtures/
+└── migrations/
+```
