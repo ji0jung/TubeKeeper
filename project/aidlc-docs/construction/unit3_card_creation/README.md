@@ -32,7 +32,17 @@ src/
 ```bash
 cd src
 cp .env.example .env
-# .env 파일 설정
+```
+
+**중요**: `.env` 파일에서 다음 값들을 설정하세요:
+```bash
+# 필수: YouTube API 키
+YOUTUBE_API_KEY=your_actual_youtube_api_key
+
+# 선택사항: AWS S3 (썸네일 업로드용)
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_S3_BUCKET=your_s3_bucket_name
 ```
 
 ### 2. Docker 실행

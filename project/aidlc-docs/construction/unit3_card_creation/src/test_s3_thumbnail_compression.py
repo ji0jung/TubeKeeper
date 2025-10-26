@@ -15,6 +15,7 @@ YouTube 메타데이터 수집 후 썸네일을 다운로드하고 압축하여 
 import asyncio
 import aiohttp
 import boto3
+import os
 from PIL import Image
 from io import BytesIO
 from uuid import uuid4
@@ -47,7 +48,10 @@ async def test_youtube_metadata_extraction():
     test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     video_id = "dQw4w9WgXcQ"
     
-    api_key = "AIzaSyAYg4Idms011jQtF520LqpdAB3r7z0MO_M"
+    api_key = os.getenv("YOUTUBE_API_KEY")
+    if not api_key:
+        print("⚠️  YOUTUBE_API_KEY 환경변수가 설정되지 않았습니다. 테스트를 건너뜁니다.")
+        return None
     base_url = "https://www.googleapis.com/youtube/v3"
     
     async with aiohttp.ClientSession() as session:

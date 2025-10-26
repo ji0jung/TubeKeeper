@@ -1,0 +1,52 @@
+# 환경 변수 파일들
+.env.local
+.env.production
+*.env.local
+*.env.production
+
+# Docker 볼륨 데이터
+postgres_integration_data/
+redis_integration_data/
+localstack_data/
+
+# 로그 파일들
+*.log
+logs/
+
+# 임시 파일들
+*.tmp
+*.temp
+.DS_Store
+
+# IDE 설정
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 테스트 결과
+test-results/
+coverage/
+.pytest_cache/
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg

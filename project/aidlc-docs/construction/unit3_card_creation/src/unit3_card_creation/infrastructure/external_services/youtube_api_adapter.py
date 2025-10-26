@@ -1,4 +1,5 @@
 import aiohttp
+import os
 from datetime import datetime
 from ...domain.services.domain_services import ContentMetadataExtractor
 from ...domain.entities.video_metadata import VideoMetadata
@@ -8,7 +9,9 @@ from ...domain.value_objects.basic_types import VideoTitle, Thumbnail
 
 class YouTubeApiAdapter(ContentMetadataExtractor):
     def __init__(self):
-        self._api_key = "AIzaSyAYg4Idms011jQtF520LqpdAB3r7z0MO_M"
+        self._api_key = os.getenv("YOUTUBE_API_KEY")
+        if not self._api_key:
+            raise ValueError("YOUTUBE_API_KEY environment variable is required")
         self._base_url = "https://www.googleapis.com/youtube/v3"
     
     async def extract_metadata(self, content_url: ContentUrl) -> VideoMetadata:
