@@ -39,6 +39,15 @@ class SQLAlchemyCategoryRepository(CategoryRepository):
         return self._to_entity(model) if model else None
     
     async def delete(self, category_id: UUID) -> None:
+        # 카드 존재 여부 확인
+        card_count = self._session.execute(
+            "SELECT COUNT(*) FROM cards WHERE category_id = :category_id",
+            {"category_id": str(category_id)}
+        ).scalar()
+        
+        if card_count > 0:
+            raise ValueError("카테고리에 카드가 존재하여 삭제할 수 없습니다")
+            
         self._session.query(CategoryModel).filter(CategoryModel.id == category_id).delete()
         self._session.commit()
     
